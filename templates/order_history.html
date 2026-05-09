@@ -1,41 +1,211 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Order History</title>
+{% extends 'base.html' %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% block content %}
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
 
-    <h1>My Orders</h1>
+    <!-- Heading -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">
+                📦 My Orders
+            </h1>
+
+            <p class="text-muted">
+                Track all your previous food orders
+            </p>
+        </div>
+
+    </div>
+
+    {% if orders %}
 
     {% for order in orders %}
 
-        <div class="card p-3 mb-3">
+    <div class="card border-0 shadow-sm mb-5 order-card">
 
-            <h5>Order #{{ order.id }}</h5>
+        <!-- Header -->
+        <div class="card-header bg-white border-0 p-4">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h4 class="fw-bold mb-1">
+                        Order #{{ order.id }}
+                    </h4>
+
+                    <small class="text-muted">
+                        Delivered Successfully
+                    </small>
+
+                </div>
+
+                <!-- Status -->
+                <div class="status-badge">
+
+                    ✅ Delivered
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Items -->
+        <div class="card-body">
 
             {% for item in order.items.all %}
 
-                <p>
-                    {{ item.restaurant.name }}
-                    - Quantity: {{ item.quantity }}
-                    - ₹{{ item.price|floatformat:2 }}
-                </p>
+            <div class="row align-items-center mb-4">
+
+                <!-- Image -->
+                <div class="col-md-3">
+
+                    <img src="{{ item.restaurant.image }}" class="order-image">
+
+                </div>
+
+                <!-- Details -->
+                <div class="col-md-6">
+
+                    <h3 class="fw-bold">
+                        {{ item.restaurant.name }}
+                    </h3>
+
+                    <p class="text-muted mb-2">
+                        {{ item.restaurant.cuisine }}
+                    </p>
+
+                    <p class="mb-2">
+                        📍 {{ item.restaurant.location }}
+                    </p>
+
+                    <span class="badge bg-dark">
+
+                        Quantity: {{ item.quantity }}
+
+                    </span>
+
+                </div>
+
+                <!-- Price -->
+                <div class="col-md-3 text-end">
+
+                    <h4 class="text-danger fw-bold">
+
+                        ₹{% widthratio item.price 1 item.quantity %}
+
+                    </h4>
+
+                    <div class="rating-box mt-2">
+
+                        ⭐ {{ item.restaurant.rating }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% if not forloop.last %}
+            <hr>
+            {% endif %}
 
             {% endfor %}
 
         </div>
 
-    {% empty %}
+        <!-- Footer -->
+        <div class="card-footer bg-white border-0 p-4">
 
-        <p>No orders found</p>
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h5 class="fw-bold">
+
+                    Total Items: {{ order.total_quantity }}
+
+                </h5>
+
+                <a href="/" class="btn btn-danger px-4">
+
+                    Order Again
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
 
     {% endfor %}
 
+    {% else %}
+
+    <!-- Empty Orders -->
+    <div class="text-center mt-5">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" width="220">
+
+        <h3 class="mt-4">
+            No orders yet
+        </h3>
+
+        <p class="text-muted">
+            Your placed orders will appear here.
+        </p>
+
+        <a href="/" class="btn btn-danger mt-3">
+
+            Explore Restaurants
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
 </div>
 
-</body>
-</html>
+<style>
+
+    .order-card {
+        border-radius: 20px;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+    .order-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .order-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 15px;
+    }
+
+    .status-badge {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 10px 18px;
+        border-radius: 30px;
+        font-weight: 600;
+    }
+
+    .rating-box {
+        background-color: green;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 10px;
+        display: inline-block;
+        font-weight: 600;
+    }
+
+</style>
+
+{% endblock %}
