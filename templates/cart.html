@@ -63,42 +63,40 @@
                             <!-- Quantity + Price -->
                             <div class="d-flex justify-content-between align-items-center">
 
-                                <div>
+                                <!-- Quantity Buttons -->
+                                <div class="d-flex align-items-center">
 
-                                    <div class="d-flex align-items-center">
+                                    <!-- Minus -->
+                                    <a href="{% url 'decrease_quantity' item.id %}"
+                                        class="btn btn-outline-dark btn-sm">
 
-                                        <!-- Minus -->
-                                        <a href="{% url 'decrease_quantity' item.id %}"
-                                            class="btn btn-outline-dark btn-sm">
+                                        -
 
-                                            -
+                                    </a>
 
-                                        </a>
+                                    <!-- Quantity -->
+                                    <span class="mx-3 fw-bold fs-5">
 
-                                        <!-- Quantity -->
-                                        <span class="mx-3 fw-bold">
+                                        {{ item.quantity }}
 
-                                            {{ item.quantity }}
+                                    </span>
 
-                                        </span>
+                                    <!-- Plus -->
+                                    <a href="{% url 'increase_quantity' item.id %}"
+                                        class="btn btn-outline-dark btn-sm">
 
-                                        <!-- Plus -->
-                                        <a href="{% url 'increase_quantity' item.id %}"
-                                            class="btn btn-outline-dark btn-sm">
+                                        +
 
-                                            +
-
-                                        </a>
-
-                                    </div>
+                                    </a>
 
                                 </div>
 
-                                <h4 class="text-danger fw-bold">
+                                <!-- Total Item Price -->
+                                <h3 class="text-danger fw-bold">
 
                                     ₹{% widthratio item.price 1 item.quantity %}
 
-                                </h4>
+                                </h3>
 
                             </div>
 
@@ -119,20 +117,26 @@
 
             <div class="card border-0 shadow-lg p-4 summary-card">
 
-                <h3 class="fw-bold mb-4">
+                <h2 class="fw-bold mb-4">
                     Order Summary
-                </h3>
+                </h2>
 
+                <!-- Total Quantity -->
                 <div class="d-flex justify-content-between mb-3">
 
                     <span>Total Items</span>
 
                     <span>
-                        {{ order.items.count }}
+
+                        {% for item in order.items.all %}
+                            {{ item.quantity }}
+                        {% endfor %}
+
                     </span>
 
                 </div>
 
+                <!-- Delivery -->
                 <div class="d-flex justify-content-between mb-3">
 
                     <span>Delivery Fee</span>
@@ -145,24 +149,26 @@
 
                 <hr>
 
+                <!-- Final Total -->
                 <div class="d-flex justify-content-between mb-4">
 
-                    <h5 class="fw-bold">
+                    <h4 class="fw-bold">
                         Total
-                    </h5>
+                    </h4>
 
-                    <h5 class="fw-bold text-danger">
+                    <h4 class="fw-bold text-danger">
 
-                        ₹{{ total_price }}
+                        ₹{{ final_total }}
 
-                    </h5>
+                    </h4>
 
                 </div>
 
-                <!-- Place Order -->
-                <a href="/place-order/" class="btn btn-danger w-100 checkout-btn">
+                <!-- Payment Button -->
+                <a href="/payment/"
+                    class="btn btn-danger w-100 checkout-btn">
 
-                    Place Order
+                    Proceed To Payment
 
                 </a>
 
@@ -177,7 +183,8 @@
     <!-- Empty Cart -->
     <div class="text-center mt-5">
 
-        <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" width="180">
+        <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
+            width="180">
 
         <h3 class="mt-4">
             Your cart is empty
@@ -200,6 +207,7 @@
 </div>
 
 <style>
+
     .cart-card {
         border-radius: 18px;
         overflow: hidden;
@@ -238,6 +246,7 @@
         font-size: 18px;
         font-weight: 600;
     }
+
 </style>
 
 {% endblock %}
