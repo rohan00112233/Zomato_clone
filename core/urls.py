@@ -21,4 +21,44 @@ path(
     name='decrease_quantity'
 ),
 
+path(
+    'api/restaurants/',
+    views.restaurant_api,
+    name='restaurant_api'
+),
+
+path(
+    'api/restaurants/<int:id>/',
+    views.restaurant_detail_api,
+    name='restaurant_detail_api'
+),
+
+path(
+    'api/add-restaurant/',
+    views.add_restaurant_api,
+    name='add_restaurant_api'
+),
+
+path(
+    'api/update-restaurant/<int:id>/',
+    views.update_restaurant_api,
+    name='update_restaurant_api'
+),
+path(
+    'api/add-restaurant/',
+    views.add_restaurant_api,
+    name='add_restaurant_api'
+),
+
+path(
+    'api/update-restaurant/<int:id>/',
+    views.update_restaurant_api,
+    name='update_restaurant_api'
+),
+
+path(
+    'api/delete-restaurant/<int:id>/',
+    views.delete_restaurant_api,
+    name='delete_restaurant_api'
+)
 ]

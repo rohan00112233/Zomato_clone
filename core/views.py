@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Restaurant, Order, OrderItem
 import razorpay
 from django.conf import settings
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import RestaurantSerializer
 
 
 # 🏠 HOME PAGE
@@ -251,4 +254,72 @@ def order_history(request):
 
         'orders': orders
 
+    })
+
+@api_view(['GET'])
+def restaurant_api(request):
+
+    restaurants = Restaurant.objects.all()
+
+    serializer = RestaurantSerializer(
+        restaurants,
+        many=True
+    )
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def restaurant_detail_api(request, id):
+
+    restaurant = Restaurant.objects.get(id=id)
+
+    serializer = RestaurantSerializer(restaurant)
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def add_restaurant_api(request):
+
+    serializer = RestaurantSerializer(
+        data=request.data
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+    return Response(serializer.errors)
+
+
+@api_view(['PUT'])
+def update_restaurant_api(request, id):
+
+    restaurant = Restaurant.objects.get(id=id)
+
+    serializer = RestaurantSerializer(
+        restaurant,
+        data=request.data
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+    return Response(serializer.errors)
+
+
+@api_view(['DELETE'])
+def delete_restaurant_api(request, id):
+
+    restaurant = Restaurant.objects.get(id=id)
+
+    restaurant.delete()
+
+    return Response({
+        'message': 'Restaurant deleted successfully'
     })
